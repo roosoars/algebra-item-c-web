@@ -1,9 +1,5 @@
 # ALGEBRA LINEAR - UFU
 
-## Repositorio
-
-- https://github.com/roosoars/algebra-item-c-web
-
 ## GitHub Pages
 
 - URL esperada: https://roosoars.github.io/algebra-item-c-web/
