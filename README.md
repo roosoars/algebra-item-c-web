@@ -1,7 +1,5 @@
 # ALGEBRA LINEAR - UFU
 
-Versao web para calcular as transformacoes do item C de Algebra Linear.
-
 ## Repositorio
 
 - https://github.com/roosoars/algebra-item-c-web
