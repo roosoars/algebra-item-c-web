@@ -3,14 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Algebra Item C</title>
+    <title>Redirecionando | Algebra Item C</title>
     <meta
       name="description"
-      content="Aplicativo desktop para calculo de transformacoes lineares do item C."
+      content="Redirecionamento para a versão estática publicada do item C."
     />
+    <script type="module">
+      const destinoPublicacao = new URL("./dist/", window.location.href).toString();
+      import("/src/main.tsx")
+        .then(() => {
+          document.getElementById("mensagem-redirecionamento")?.remove();
+        })
+        .catch(() => {
+          window.location.replace(destinoPublicacao);
+        });
+    </script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <p id="mensagem-redirecionamento">
+      Redirecionando para a aplicação publicada...
+      <a href="./dist/">Abrir manualmente</a>
+    </p>
   </body>
 </html>
