@@ -1,119 +1,126 @@
-import { formatNumber, formatVector } from "./format";
-import type { CalculationResult, Matrix3 } from "./types";
+import { formatarNumero, formatarVetor } from "./format";
+import type { Matriz3, ResultadoCalculo } from "./types";
 
-export type SolutionStep = {
-  title: string;
-  description: string;
-  equation: string;
-  result?: string;
+export type PassoSolucao = {
+  titulo: string;
+  descricao: string;
+  equacao: string;
+  resultado?: string;
 };
 
-function formatMatrix(matrix: Matrix3): string {
+/**
+ * Converte a matriz para um bloco multilinha legível na resolução passo a passo.
+ */
+function formatarMatriz(matriz: Matriz3): string {
   return [
     "[",
-    ...matrix.map((row) => `  [${row.map((value) => formatNumber(value)).join(", ")}]`),
+    ...matriz.map((linha) => `  [${linha.map((valor) => formatarNumero(valor)).join(", ")}]`),
     "]"
   ].join("\n");
 }
 
-export function buildSolutionSteps(result: CalculationResult): SolutionStep[] {
-  const [x, y, z] = result.input;
+/**
+ * Monta cada etapa textual da solução com base no resultado já calculado.
+ */
+export function construirPassosResolucao(resultado: ResultadoCalculo): PassoSolucao[] {
+  // As componentes são separadas para deixar as fórmulas finais mais legíveis.
+  const [x, y, z] = resultado.entrada;
 
-  const t1x = result.vectors.t1[0];
-  const t1y = result.vectors.t1[1];
-  const t1z = result.vectors.t1[2];
+  const t1x = resultado.vetores.t1[0];
+  const t1y = resultado.vetores.t1[1];
+  const t1z = resultado.vetores.t1[2];
 
-  const t2x = result.vectors.t2[0];
-  const t2y = result.vectors.t2[1];
-  const t2z = result.vectors.t2[2];
+  const t2x = resultado.vetores.t2[0];
+  const t2y = resultado.vetores.t2[1];
+  const t2z = resultado.vetores.t2[2];
 
-  const sumx = result.vectors.t1PlusT2[0];
-  const sumy = result.vectors.t1PlusT2[1];
-  const sumz = result.vectors.t1PlusT2[2];
+  const sumx = resultado.vetores.t1MaisT2[0];
+  const sumy = resultado.vetores.t1MaisT2[1];
+  const sumz = resultado.vetores.t1MaisT2[2];
 
-  const compx = result.vectors.t2ComposeT1[0];
-  const compy = result.vectors.t2ComposeT1[1];
-  const compz = result.vectors.t2ComposeT1[2];
+  const compx = resultado.vetores.t2CompostaT1[0];
+  const compy = resultado.vetores.t2CompostaT1[1];
+  const compz = resultado.vetores.t2CompostaT1[2];
 
-  const checkSymbol = result.consistency ? "=" : "≠";
-  const checkLabel = result.consistency ? "Consistente" : "Divergente";
+  const simboloVerificacao = resultado.consistencia ? "=" : "≠";
+  const rotuloVerificacao = resultado.consistencia ? "Consistente" : "Divergente";
 
   return [
     {
-      title: "Definir o item C",
-      description: "Usamos as transformações lineares do enunciado.",
-      equation: [
+      titulo: "Definir o item C",
+      descricao: "Usamos as transformações lineares do enunciado.",
+      equacao: [
         "T₁(x, y, z) = (x − z, y − z, z − x)",
         "T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z)"
       ].join("\n"),
-      result: "Objetivo: calcular T₁(v), T₂(v), (T₁ + T₂)(v) e (T₂ ∘ T₁)(v)."
+      resultado: "Objetivo: calcular T₁(v), T₂(v), (T₁ + T₂)(v) e (T₂ ∘ T₁)(v)."
     },
     {
-      title: "Usar as matrizes A e B",
-      description: "Aplicamos a dica do enunciado: usar as matrizes das transformações.",
-      equation: [
-        `A =\n${formatMatrix(result.matrices.A)}`,
-        `B =\n${formatMatrix(result.matrices.B)}`
+      titulo: "Usar as matrizes A e B",
+      descricao: "Aplicamos a dica do enunciado: usar as matrizes das transformações.",
+      equacao: [
+        `A =\n${formatarMatriz(resultado.matrizes.A)}`,
+        `B =\n${formatarMatriz(resultado.matrizes.B)}`
       ].join("\n\n"),
-      result: "Também serão usadas A + B e BA."
+      resultado: "Também serão usadas A + B e BA."
     },
     {
-      title: "Ler o vetor de entrada",
-      description: "Interpretamos v = (a, b, c) como (x, y, z).",
-      equation: `v = (${formatNumber(x)}, ${formatNumber(y)}, ${formatNumber(z)})`,
-      result: `v = ${formatVector(result.input)}`
+      titulo: "Ler o vetor de entrada",
+      descricao: "Interpretamos v = (a, b, c) como (x, y, z).",
+      equacao: `v = (${formatarNumero(x)}, ${formatarNumero(y)}, ${formatarNumero(z)})`,
+      resultado: `v = ${formatarVetor(resultado.entrada)}`
     },
     {
-      title: "Calcular T₁(v)",
-      description: "Aplicamos T₁(x, y, z) = (x − z, y − z, z − x).",
-      equation: [
-        `x − z = ${formatNumber(x)} − ${formatNumber(z)} = ${formatNumber(t1x)}`,
-        `y − z = ${formatNumber(y)} − ${formatNumber(z)} = ${formatNumber(t1y)}`,
-        `z − x = ${formatNumber(z)} − ${formatNumber(x)} = ${formatNumber(t1z)}`
+      titulo: "Calcular T₁(v)",
+      descricao: "Aplicamos T₁(x, y, z) = (x − z, y − z, z − x).",
+      equacao: [
+        `x − z = ${formatarNumero(x)} − ${formatarNumero(z)} = ${formatarNumero(t1x)}`,
+        `y − z = ${formatarNumero(y)} − ${formatarNumero(z)} = ${formatarNumero(t1y)}`,
+        `z − x = ${formatarNumero(z)} − ${formatarNumero(x)} = ${formatarNumero(t1z)}`
       ].join("\n"),
-      result: `T₁(v) = ${formatVector(result.vectors.t1)}`
+      resultado: `T₁(v) = ${formatarVetor(resultado.vetores.t1)}`
     },
     {
-      title: "Calcular T₂(v)",
-      description: "Aplicamos T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z).",
-      equation: [
-        `3x = 3·${formatNumber(x)} = ${formatNumber(t2x)}`,
-        `2x + 5y = 2·${formatNumber(x)} + 5·${formatNumber(y)} = ${formatNumber(t2y)}`,
-        `x + y + 8z = ${formatNumber(x)} + ${formatNumber(y)} + 8·${formatNumber(z)} = ${formatNumber(t2z)}`
+      titulo: "Calcular T₂(v)",
+      descricao: "Aplicamos T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z).",
+      equacao: [
+        `3x = 3·${formatarNumero(x)} = ${formatarNumero(t2x)}`,
+        `2x + 5y = 2·${formatarNumero(x)} + 5·${formatarNumero(y)} = ${formatarNumero(t2y)}`,
+        `x + y + 8z = ${formatarNumero(x)} + ${formatarNumero(y)} + 8·${formatarNumero(z)} = ${formatarNumero(t2z)}`
       ].join("\n"),
-      result: `T₂(v) = ${formatVector(result.vectors.t2)}`
+      resultado: `T₂(v) = ${formatarVetor(resultado.vetores.t2)}`
     },
     {
-      title: "Calcular (T₁ + T₂)(v)",
-      description: "Somamos componente a componente.",
-      equation: [
-        `${formatNumber(t1x)} + ${formatNumber(t2x)} = ${formatNumber(sumx)}`,
-        `${formatNumber(t1y)} + ${formatNumber(t2y)} = ${formatNumber(sumy)}`,
-        `${formatNumber(t1z)} + ${formatNumber(t2z)} = ${formatNumber(sumz)}`
+      titulo: "Calcular (T₁ + T₂)(v)",
+      descricao: "Somamos componente a componente.",
+      equacao: [
+        `${formatarNumero(t1x)} + ${formatarNumero(t2x)} = ${formatarNumero(sumx)}`,
+        `${formatarNumero(t1y)} + ${formatarNumero(t2y)} = ${formatarNumero(sumy)}`,
+        `${formatarNumero(t1z)} + ${formatarNumero(t2z)} = ${formatarNumero(sumz)}`
       ].join("\n"),
-      result: `(T₁ + T₂)(v) = ${formatVector(result.vectors.t1PlusT2)}`
+      resultado: `(T₁ + T₂)(v) = ${formatarVetor(resultado.vetores.t1MaisT2)}`
     },
     {
-      title: "Calcular (T₂ ∘ T₁)(v)",
-      description: "Usamos a matriz de composição BA.",
-      equation: [
-        `BA =\n${formatMatrix(result.matrices.BtimesA)}`,
+      titulo: "Calcular (T₂ ∘ T₁)(v)",
+      descricao: "Usamos a matriz de composição BA.",
+      equacao: [
+        `BA =\n${formatarMatriz(resultado.matrizes.BvezesA)}`,
         "",
-        `3x − 3z = 3·${formatNumber(x)} − 3·${formatNumber(z)} = ${formatNumber(compx)}`,
-        `2x + 5y − 7z = 2·${formatNumber(x)} + 5·${formatNumber(y)} − 7·${formatNumber(z)} = ${formatNumber(compy)}`,
-        `−7x + y + 6z = −7·${formatNumber(x)} + ${formatNumber(y)} + 6·${formatNumber(z)} = ${formatNumber(compz)}`
+        `3x − 3z = 3·${formatarNumero(x)} − 3·${formatarNumero(z)} = ${formatarNumero(compx)}`,
+        `2x + 5y − 7z = 2·${formatarNumero(x)} + 5·${formatarNumero(y)} − 7·${formatarNumero(z)} = ${formatarNumero(compy)}`,
+        `−7x + y + 6z = −7·${formatarNumero(x)} + ${formatarNumero(y)} + 6·${formatarNumero(z)} = ${formatarNumero(compz)}`
       ].join("\n"),
-      result: `(T₂ ∘ T₁)(v) = ${formatVector(result.vectors.t2ComposeT1)}`
+      resultado: `(T₂ ∘ T₁)(v) = ${formatarVetor(resultado.vetores.t2CompostaT1)}`
     },
     {
-      title: "Verificação final",
-      description: "Conferimos se B(T₁(v)) coincide com (BA)v.",
-      equation: [
-        `B(T₁(v)) = ${formatVector(result.vectors.bOfAv)}`,
-        `(BA)v = ${formatVector(result.vectors.t2ComposeT1)}`,
-        `B(T₁(v)) ${checkSymbol} (BA)v`
+      titulo: "Verificação final",
+      descricao: "Conferimos se B(T₁(v)) coincide com (BA)v.",
+      equacao: [
+        `B(T₁(v)) = ${formatarVetor(resultado.vetores.bDeAv)}`,
+        `(BA)v = ${formatarVetor(resultado.vetores.t2CompostaT1)}`,
+        `B(T₁(v)) ${simboloVerificacao} (BA)v`
       ].join("\n"),
-      result: `Status da verificação: ${checkLabel}`
+      resultado: `Status da verificação: ${rotuloVerificacao}`
     }
   ];
 }

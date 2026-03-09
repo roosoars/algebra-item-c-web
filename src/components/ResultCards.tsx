@@ -1,19 +1,23 @@
 import type { FC } from "react";
-import { formatVector } from "../core/format";
-import type { CalculationResult } from "../core/types";
+import { formatarVetor } from "../core/format";
+import type { ResultadoCalculo } from "../core/types";
 
-type ResultCardsProps = {
-  result: CalculationResult | null;
+type PropriedadesCartoesResultado = {
+  resultado: ResultadoCalculo | null;
 };
 
-const ResultCards: FC<ResultCardsProps> = ({ result }) => {
-  const rows = result
+/**
+ * Resume os resultados principais em cartões para leitura rápida.
+ */
+const CartoesResultado: FC<PropriedadesCartoesResultado> = ({ resultado }) => {
+  // Os cartões só são montados quando já existe um cálculo válido.
+  const linhas = resultado
     ? [
-        { label: "v", value: formatVector(result.input) },
-        { label: "T₁(v)", value: formatVector(result.vectors.t1) },
-        { label: "T₂(v)", value: formatVector(result.vectors.t2) },
-        { label: "(T₁ + T₂)(v)", value: formatVector(result.vectors.t1PlusT2) },
-        { label: "(T₂ ∘ T₁)(v)", value: formatVector(result.vectors.t2ComposeT1) }
+        { rotulo: "v", valor: formatarVetor(resultado.entrada) },
+        { rotulo: "T₁(v)", valor: formatarVetor(resultado.vetores.t1) },
+        { rotulo: "T₂(v)", valor: formatarVetor(resultado.vetores.t2) },
+        { rotulo: "(T₁ + T₂)(v)", valor: formatarVetor(resultado.vetores.t1MaisT2) },
+        { rotulo: "(T₂ ∘ T₁)(v)", valor: formatarVetor(resultado.vetores.t2CompostaT1) }
       ]
     : [];
 
@@ -21,14 +25,14 @@ const ResultCards: FC<ResultCardsProps> = ({ result }) => {
     <section className="panel">
       <h2>Resultados principais</h2>
 
-      {rows.length > 0 ? (
+      {linhas.length > 0 ? (
         <div className="cards-grid">
-          {rows.map((row) => (
-            <article className="result-card" key={row.label}>
+          {linhas.map((linha) => (
+            <article className="result-card" key={linha.rotulo}>
               <p className="result-inline">
-                <span className="result-inline-label">{row.label}</span>
+                <span className="result-inline-label">{linha.rotulo}</span>
                 <span className="result-inline-equals">=</span>
-                <span className="result-inline-value">{row.value}</span>
+                <span className="result-inline-value">{linha.valor}</span>
               </p>
             </article>
           ))}
@@ -38,4 +42,4 @@ const ResultCards: FC<ResultCardsProps> = ({ result }) => {
   );
 };
 
-export default ResultCards;
+export default CartoesResultado;

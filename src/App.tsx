@@ -1,18 +1,18 @@
 import { useState } from "react";
-import InputPanel from "./components/InputPanel";
-import ResultCards from "./components/ResultCards";
-import ResultTable from "./components/ResultTable";
-import StepTimeline from "./components/StepTimeline";
-import { calculateItemC, validateVectorInput } from "./core/math";
-import type { CalculationResult } from "./core/types";
-import { buildSolutionSteps } from "./core/steps";
+import PainelEntrada from "./components/InputPanel";
+import CartoesResultado from "./components/ResultCards";
+import TabelaResultado from "./components/ResultTable";
+import LinhaDoTempoEtapas from "./components/StepTimeline";
+import { calcularItemC, validarEntradaVetor } from "./core/math";
+import type { ResultadoCalculo } from "./core/types";
+import { construirPassosResolucao } from "./core/steps";
 
 function App() {
   const [a, setA] = useState("");
   const [b, setB] = useState("");
   const [c, setC] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<CalculationResult | null>(null);
+  const [result, setResult] = useState<ResultadoCalculo | null>(null);
   const [animationSeed, setAnimationSeed] = useState(0);
 
   const handleChange = (field: "a" | "b" | "c", value: string) => {
@@ -28,15 +28,15 @@ function App() {
   };
 
   const handleCalculate = () => {
-    const validation = validateVectorInput(a, b, c);
+    const validation = validarEntradaVetor(a, b, c);
 
     if (!validation.ok) {
-      setError(validation.message);
+      setError(validation.mensagem);
       setResult(null);
       return;
     }
 
-    const calculated = calculateItemC(validation.value);
+    const calculated = calcularItemC(validation.valor);
     setResult(calculated);
     setError(null);
     setAnimationSeed((value) => value + 1);
@@ -51,7 +51,7 @@ function App() {
     setAnimationSeed((value) => value + 1);
   };
 
-  const steps = result ? buildSolutionSteps(result) : [];
+  const steps = result ? construirPassosResolucao(result) : [];
 
   return (
     <div className="app-shell">
@@ -79,27 +79,27 @@ T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z)`}
       <main className="main-shell">
         <section className="execution-layout" aria-live="polite">
           <div className="execution-input">
-            <InputPanel
+            <PainelEntrada
               a={a}
               b={b}
               c={c}
-              error={error}
-              onChange={handleChange}
-              onCalculate={handleCalculate}
-              onClear={handleClear}
+              erro={error}
+              aoAlterar={handleChange}
+              aoCalcular={handleCalculate}
+              aoLimpar={handleClear}
             />
           </div>
 
           <div className="execution-main">
-            <StepTimeline
-              title="Resolução passo a passo"
-              description="Cálculo completo da Questão 4 para o item C."
-              steps={steps}
-              animateSeed={animationSeed}
-              emptyMessage="Informe o vetor v = (a, b, c) e clique em Calcular para iniciar a resolução animada."
+            <LinhaDoTempoEtapas
+              titulo="Resolução passo a passo"
+              descricao="Cálculo completo da Questão 4 para o item C."
+              passos={steps}
+              sementeAnimacao={animationSeed}
+              mensagemVazia="Informe o vetor v = (a, b, c) e clique em Calcular para iniciar a resolução animada."
             />
-            <ResultCards result={result} />
-            <ResultTable result={result} />
+            <CartoesResultado resultado={result} />
+            <TabelaResultado resultado={result} />
           </div>
         </section>
       </main>

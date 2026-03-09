@@ -1,25 +1,28 @@
 import type { FC } from "react";
 
-type FieldKey = "a" | "b" | "c";
+type CampoVetor = "a" | "b" | "c";
 
-type InputPanelProps = {
+type PropriedadesPainelEntrada = {
   a: string;
   b: string;
   c: string;
-  error: string | null;
-  onChange: (field: FieldKey, value: string) => void;
-  onCalculate: () => void;
-  onClear: () => void;
+  erro: string | null;
+  aoAlterar: (campo: CampoVetor, valor: string) => void;
+  aoCalcular: () => void;
+  aoLimpar: () => void;
 };
 
-const InputPanel: FC<InputPanelProps> = ({
+/**
+ * Reúne a entrada do vetor e repassa as ações para o componente principal.
+ */
+const PainelEntrada: FC<PropriedadesPainelEntrada> = ({
   a,
   b,
   c,
-  error,
-  onChange,
-  onCalculate,
-  onClear
+  erro,
+  aoAlterar,
+  aoCalcular,
+  aoLimpar
 }) => {
   return (
     <section className="panel panel-input">
@@ -34,13 +37,14 @@ const InputPanel: FC<InputPanelProps> = ({
 T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z)`}
       </pre>
 
+      {/* Cada campo representa uma coordenada do vetor informado pelo usuário. */}
       <div className="input-grid">
         <label>
           <span>a</span>
           <input
             type="text"
             value={a}
-            onChange={(event) => onChange("a", event.target.value)}
+            onChange={(event) => aoAlterar("a", event.target.value)}
             placeholder="Ex.: 1"
             inputMode="decimal"
           />
@@ -51,7 +55,7 @@ T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z)`}
           <input
             type="text"
             value={b}
-            onChange={(event) => onChange("b", event.target.value)}
+            onChange={(event) => aoAlterar("b", event.target.value)}
             placeholder="Ex.: 2"
             inputMode="decimal"
           />
@@ -62,7 +66,7 @@ T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z)`}
           <input
             type="text"
             value={c}
-            onChange={(event) => onChange("c", event.target.value)}
+            onChange={(event) => aoAlterar("c", event.target.value)}
             placeholder="Ex.: 3"
             inputMode="decimal"
           />
@@ -70,17 +74,17 @@ T₂(x, y, z) = (3x, 2x + 5y, x + y + 8z)`}
       </div>
 
       <div className="actions-row">
-        <button type="button" className="btn-primary" onClick={onCalculate}>
+        <button type="button" className="btn-primary" onClick={aoCalcular}>
           Calcular
         </button>
-        <button type="button" className="btn-secondary" onClick={onClear}>
+        <button type="button" className="btn-secondary" onClick={aoLimpar}>
           Limpar
         </button>
       </div>
 
-      {error ? <p className="error-text">{error}</p> : null}
+      {erro ? <p className="error-text">{erro}</p> : null}
     </section>
   );
 };
 
-export default InputPanel;
+export default PainelEntrada;

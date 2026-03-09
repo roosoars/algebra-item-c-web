@@ -1,25 +1,28 @@
-export type Vector3 = [number, number, number];
+// Vetor coluna de três componentes usado em todas as transformações do exercício.
+export type Vetor3 = [number, number, number];
 
-export type Matrix3 = [
+// Matriz 3x3 associada às transformações lineares informadas no enunciado.
+export type Matriz3 = [
   [number, number, number],
   [number, number, number],
   [number, number, number]
 ];
 
-export type CalculationResult = {
-  input: Vector3;
-  matrices: {
-    A: Matrix3;
-    B: Matrix3;
-    AplusB: Matrix3;
-    BtimesA: Matrix3;
+// Estrutura agregada com todos os dados calculados e prontos para exibição.
+export type ResultadoCalculo = {
+  entrada: Vetor3;
+  matrizes: {
+    A: Matriz3;
+    B: Matriz3;
+    AmaisB: Matriz3;
+    BvezesA: Matriz3;
   };
-  vectors: {
-    t1: Vector3;
-    t2: Vector3;
-    t1PlusT2: Vector3;
-    t2ComposeT1: Vector3;
-    bOfAv: Vector3;
+  vetores: {
+    t1: Vetor3;
+    t2: Vetor3;
+    t1MaisT2: Vetor3;
+    t2CompostaT1: Vetor3;
+    bDeAv: Vetor3;
   };
-  consistency: boolean;
+  consistencia: boolean;
 };
